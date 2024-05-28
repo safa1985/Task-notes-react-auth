@@ -1,14 +1,23 @@
 import { useMutation } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { register } from "../api/auth";
+import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import UserContext from "../context/UserContext";
 
 const Register = () => {
   const [userInfo, setUserInfo] = useState({});
+  const [user, setUser] = useContext(UserContext);
+  const nav = useNavigate();
 
   const { mutate } = useMutation({
     mutationKey: [`register`],
     mutationFn: () => {
       register(userInfo);
+    },
+    onSuccess: () => {
+      setUser(true);
+      nav("/");
     },
   });
   const handleChange = (e) => {
@@ -20,7 +29,7 @@ const Register = () => {
   };
 
   const handleFormSubmit = (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     // Add register logic here
     mutate();
   };
